@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dense
+import matplotlib.pyplot as plt
 
 train_datagen = ImageDataGenerator(
         rescale=1./255,
@@ -40,11 +41,16 @@ cnn.add(Dense(units=128, activation='relu'))
 cnn.add(Dense(units=1, activation='sigmoid'))
 
 cnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-cnn.fit(
+r = cnn.fit(
     x=train_set,
     validation_data=test_set,
-    epochs=25
+    epochs=50
 )
+
+plt.plot(r.history['accuracy'], label='accuracy')
+plt.plot(r.history['val_accuracy'], label='val_accuracy')
+plt.legend()
+plt.savefig('./output/cnn_accuracy_by_epochs.png')
 
 cnn.save("./output/cnn_model")
 
